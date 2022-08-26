@@ -3,11 +3,10 @@ import mongoose from 'mongoose';
 
 import bodyParser from 'body-parser';
 import cors from 'cors';
+import postRoutes from './routes/posts.js'
 
+//setup express server
 const app = express();
-app.use(bodyParser.json({limit: '30mb', extended: true}));
-app.use(bodyParser.urlencoded({limit: '30mb', extended: true}));
-app.use(cors());
 
 //setup MongoDB dataBase www.mongodb/cloud/atlas:
 //mongodb+srv://ogahcletus2022:soul_fishers1@cluster0.qmimfbb.mongodb.net/?retryWrites=true&w=majority
@@ -15,7 +14,7 @@ app.use(cors());
 
 const CONNECTION_URL = 'mongodb+srv://ogahcletus2022:soul_fishers1@cluster0.qmimfbb.mongodb.net/?retryWrites=true&w=majority';
 
-const PORT = process.env.PORT || 5000;
+const PORT = process.env.PORT || 8000;
 
 mongoose.connect (CONNECTION_URL, {
     useNewUrlParser: true,
@@ -23,7 +22,17 @@ mongoose.connect (CONNECTION_URL, {
 })
     .then(() => app.listen(PORT, () => console.log('Server is connected to Mongoose DataBase at port:', PORT)))
     
-    .catch(() => console.log(error.message));
+    .catch((error) => console.log(error.message));
+
+
+    ////setup the middleware
+app.use(bodyParser.json({limit: '30mb', extended: true}));
+app.use(bodyParser.urlencoded({limit: '30mb', extended: true}));
+app.use(cors()); 
+   
+  //setup middlewares for routes
+app.use('/posts', postRoutes)
+    
 
     //Once connected to the DataBase, next is to create the routes
 
